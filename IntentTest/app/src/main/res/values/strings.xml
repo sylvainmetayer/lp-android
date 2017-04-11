@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">IntentTest</string>
+    <string name="input">Entrer votre texte</string>
+    <string name="send">Envoyer !</string>
+    <string name="waiting">En attente........</string>
 </resources>
