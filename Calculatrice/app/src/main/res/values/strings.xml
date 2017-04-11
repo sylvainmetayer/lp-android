@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Calculatrice</string>
+    <string name="number1">Entrez la première valeur</string>
+    <string name="number2">Entrez la deuxième valeur</string>
+    <string name="addition">+</string>
+    <string name="soustraction">-</string>
+    <string name="multiplication">*</string>
+    <string name="division">/</string>
+    <string name="result">Résultat</string>
+</resources>
