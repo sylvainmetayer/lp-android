@@ -14,7 +14,6 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-
         final EditText address = (EditText) findViewById(R.id.address_edit);
         final EditText name = (EditText) findViewById(R.id.name_edit);
         final EditText phone = (EditText) findViewById(R.id.phone_edit);
@@ -38,16 +37,13 @@ public class EditActivity extends AppCompatActivity {
         original_name = name.getText().toString();
         original_phone = phone.getText().toString();
 
-
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String s_address, s_phone, s_name;
-
                 s_address = address.getText().toString();
                 s_phone = phone.getText().toString();
                 s_name = name.getText().toString();
-
                 Intent myIntent = new Intent(v.getContext(), MainActivity.class);
                 myIntent.putExtra("address", s_address);
                 myIntent.putExtra("phone", s_phone);
