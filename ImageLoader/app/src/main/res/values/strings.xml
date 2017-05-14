@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ImageLoader</string>
+    <string name="load">Charger une image !</string>
+</resources>
