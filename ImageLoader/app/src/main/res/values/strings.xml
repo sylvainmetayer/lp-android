@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ImageLoader</string>
     <string name="load">Charger une image !</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
+    <string name="gris">Niveau de gris</string>
+    <string name="color">Inverser les couleurs</string>
 </resources>

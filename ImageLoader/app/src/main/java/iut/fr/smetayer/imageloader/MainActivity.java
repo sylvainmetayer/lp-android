@@ -1,33 +1,33 @@
 package iut.fr.smetayer.imageloader;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSION_TO_ACCESS_STORAGE = 1;
-    private Button load;
-    private String image;
+    private static final int REQUEST_IMAGE_GET = 2;
     private ImageView loadInto;
 
     @Override
@@ -36,19 +36,55 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.loadInto = (ImageView) findViewById(R.id.image);
-        this.load = (Button) findViewById(R.id.load);
-        this.image = Environment.getExternalStorageDirectory() + "/DCIM/Camera/IMG_20170513_145659.jpg";
+    }
 
-        this.load.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("IUT", "Click on load button !");
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_image:
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSION_TO_ACCESS_STORAGE);
-            }
-        });
+                loadInto.clearColorFilter();
+                return true;
+            case R.id.menu_horizontal:
+                //add the function to perform here
+                loadInto.setRotationY(loadInto.getRotationY() + 180);
+                return true;
+            case R.id.menu_vertical:
+                loadInto.setRotationX(loadInto.getRotationX() + 180);
+                return true;
+            case R.id.menu_color:
+                /**
+                 * Color matrix that flips the components (<code>-1.0f * c + 255 = 255 - c</code>)
+                 * and keeps the alpha intact.
+                 */
+                final float[] NEGATIVE = {
+                        -1.0f, 0, 0, 0, 255, // red
+                        0, -1.0f, 0, 0, 255, // green
+                        0, 0, -1.0f, 0, 255, // blue
+                        0, 0, 0, 1.0f, 0  // alpha
+                };
 
+                loadInto.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
+
+                return true;
+            case R.id.menu_gris:
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                loadInto.setColorFilter(filter);
+                return true;
+        }
+        return (super.onOptionsItemSelected(item));
     }
 
     @Override
@@ -57,51 +93,39 @@ public class MainActivity extends AppCompatActivity {
             case MainActivity.MY_PERMISSION_TO_ACCESS_STORAGE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("CALL", "User granted permission");
-                    //loadImage();
-                    loadPicture(MainActivity.this.loadInto, MainActivity.this.image);
+                    startActivityForResult(
+                            Intent.createChooser(
+                                    new Intent(Intent.ACTION_GET_CONTENT)
+                                            .setType("image/*"), "Choose an image"),
+                            MainActivity.REQUEST_IMAGE_GET);
                 } else {
-                    Log.wtf("CALL", "User denied permissions");
+                    Log.wtf("", "ERROR");
                 }
             }
             default: {
                 Log.wtf("", "Unknown code : " + requestCode);
             }
         }
-
     }
 
-    public void loadImage() {
-        ImageView imageview = (ImageView) findViewById(R.id.image);
+    /**
+     * @see "http://codetheory.in/android-pick-select-image-from-gallery-with-intents/"
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MainActivity.REQUEST_IMAGE_GET && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
 
-        //loadPicture(imageview, image);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.activity_main, null);
-        RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.activity_main);
-
-        ImageView imageView = new ImageView(MainActivity.this);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.BELOW, MainActivity.this.load.getId());
-
-        File imgFile = new File(image);
-        if (imgFile.exists()) {
-            Log.i("IUT", "It exist !");
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            imageView.setImageBitmap(myBitmap);
-            imageView.setLayoutParams(params);
-            rl.addView(imageView);
+                ImageView imageView = (ImageView) findViewById(R.id.image);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void loadPicture(ImageView loadInto, String photoUrl) {
-        Glide
-                .with(MainActivity.this)
-                .load(photoUrl)
-                .centerCrop()
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(loadInto);
-    }
 }
+
