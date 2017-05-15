@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AsyncTaskLabri</string>
+    <string name="text">TextView</string>
+    <string name="button">Button</string>
+</resources>
