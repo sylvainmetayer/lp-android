@@ -1,16 +1,11 @@
 package fr.iut.smetayer.tetris;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import fr.iut.smetayer.tetris.metier.Piece;
 import fr.iut.smetayer.tetris.metier.pieces.Piece_I;

@@ -10,7 +10,7 @@ public class Piece_I extends Piece {
 
     @Override
     public void rotate(Float angle) {
-
+        // TODO Appliquer la rotation à la matrice.
     }
 
     @Override

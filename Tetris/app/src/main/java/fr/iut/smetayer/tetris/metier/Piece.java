@@ -35,11 +35,11 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return matrice;
     }
 
-    public int getPos_i() {
+    public int getLine() {
         return pos_i;
     }
 
-    public int getPos_j() {
+    public int getColumn() {
         return pos_j;
     }
 
