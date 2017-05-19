@@ -7,6 +7,7 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.iut.smetayer.tetris.metier.Game;
 import fr.iut.smetayer.tetris.metier.Piece;
 import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
 
@@ -18,26 +19,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         int nb_columns = 10;
-        int nb_lines = 9;
+        int nb_lines = 22;
 
         GridView layout = (GridView) findViewById(R.id.grid);
 
-        List<Piece> datas = new ArrayList<Piece>();
+        List<Piece> datas = new ArrayList<>();
 
-        for (int i = 0; i < nb_columns; i++) {
-            for (int j = 0; j < nb_lines; j++) {
-                int dim1[][] = new int[3][];
-                dim1[0] = new int[4];
-                dim1[1] = new int[9];
-                dim1[2] = new int[2];
-                Piece piece_tmp = new Piece_I(2, 2, dim1, 1, 3, 2);
-                datas.add(piece_tmp);
-            }
-        }
+        int[][] matrice =
+                {
+                        {0, 1, 1},
+                        {1, 1}
+                };
+        Piece piece_tmp = new Piece_I(2, 3, matrice, 0, 0);
+        datas.add(piece_tmp);
 
-        MyAdapter adapter = new MyAdapter(MainActivity.this, R.layout.item, (ArrayList<Piece>) datas);
+        Game gameboard = new Game((ArrayList<Piece>) datas, nb_lines, nb_columns);
+        MyAdapter adapter = new MyAdapter(MainActivity.this, R.layout.item, gameboard.getGameboard());
         layout.setAdapter(adapter);
-
 
     }
 }

@@ -4,8 +4,8 @@ import fr.iut.smetayer.tetris.metier.Piece;
 
 public class Piece_I extends Piece {
 
-    public Piece_I(int hauteur, int largeur, int[][] matrice, int pos_i, int pos_j, int color) {
-        super(hauteur, largeur, matrice, pos_i, pos_j, color);
+    public Piece_I(int hauteur, int largeur, int[][] matrice, int pos_i, int pos_j) {
+        super(hauteur, largeur, matrice, pos_i, pos_j, 1);
     }
 
     @Override

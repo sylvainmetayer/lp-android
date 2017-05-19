@@ -1,6 +1,7 @@
 package fr.iut.smetayer.tetris;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,16 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import fr.iut.smetayer.tetris.metier.Piece;
 
-public class MyAdapter extends ArrayAdapter<Piece> {
+public class MyAdapter extends ArrayAdapter<Integer> {
 
     private Context mContext;
     private LayoutInflater inflater = null;
 
-    public MyAdapter(Context context, int textViewResourceId, ArrayList<Piece> items) {
+    public MyAdapter(Context context, int textViewResourceId, Integer[] items) {
         super(context, textViewResourceId, items);
         mContext = context;
         inflater = (LayoutInflater) mContext
@@ -33,17 +32,11 @@ public class MyAdapter extends ArrayAdapter<Piece> {
         if (convertView == null)
             vi = inflater.inflate(R.layout.item, null);
 
-        Piece data = getItem(position);
-
+        int data = getItem(position);
+        Log.d("GET_VIEW_ADAPTER", "Position : " + position);
+        Log.d("GET_VIEW_ADAPTER", "Data : " + data);
         ImageView imageView = (ImageView) vi.findViewById(R.id.imageView);
-
-        assert data != null;
-        Log.i("IUT", data.toString());
-
-        TextView textView = (TextView) vi.findViewById(R.id.textView);
-
-        textView.setText(data.toString());
-
+        imageView.setImageResource(Piece.getImage(data));
         return vi;
     }
 

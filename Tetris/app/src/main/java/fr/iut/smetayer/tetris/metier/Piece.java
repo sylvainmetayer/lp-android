@@ -1,5 +1,9 @@
 package fr.iut.smetayer.tetris.metier;
 
+import android.graphics.drawable.Drawable;
+
+import fr.iut.smetayer.tetris.R;
+
 public abstract class Piece implements Mouvement, MouvementPossible {
 
     private int hauteur;
@@ -8,7 +12,6 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     private int pos_i;
     private int pos_j;
     private int color;
-    private int INT_CODE;
 
     public Piece(int hauteur, int largeur, int[][] matrice, int pos_i, int pos_j, int color) {
         this.hauteur = hauteur;
@@ -23,9 +26,6 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return hauteur;
     }
 
-    public int getINT_CODE() {
-        return INT_CODE;
-    }
 
     public int getLargeur() {
         return largeur;
@@ -45,6 +45,16 @@ public abstract class Piece implements Mouvement, MouvementPossible {
 
     public int getColor() {
         return color;
+    }
+
+    public static int getImage(int value) {
+        switch (value) {
+            case 1:
+                return R.drawable.blue_image;
+            case 0:
+                return R.drawable.white_image;
+        }
+        return R.drawable.white_image;
     }
 
     @Override
