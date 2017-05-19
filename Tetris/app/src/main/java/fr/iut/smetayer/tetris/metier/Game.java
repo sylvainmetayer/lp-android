@@ -10,7 +10,7 @@ public class Game {
 
     public Game(ArrayList<Piece> pieces, int nb_lines, int nb_columns) {
 
-        gameboard = new int[nb_columns][nb_lines];
+        gameboard = new int[nb_lines][nb_columns];
 
         // Initialize with empty values.
         for (int i = 0; i < gameboard.length; i++) {
@@ -50,6 +50,7 @@ public class Game {
                 newArray[i * row.length + j] = Integer.valueOf(number);
             }
         }
+        Log.i("GAMEBOARD_INIT", Arrays.toString(newArray));
         return newArray;
     }
 }

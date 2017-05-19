@@ -52,9 +52,9 @@ public abstract class Piece implements Mouvement, MouvementPossible {
             case 1:
                 return R.drawable.blue_image;
             case 0:
-                return R.drawable.white_image;
+                return R.drawable.black_image;
         }
-        return R.drawable.white_image;
+        return R.drawable.black_image;
     }
 
     @Override
