@@ -26,7 +26,6 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return hauteur;
     }
 
-
     public int getLargeur() {
         return largeur;
     }
@@ -55,6 +54,10 @@ public abstract class Piece implements Mouvement, MouvementPossible {
                 return R.drawable.black_image;
         }
         return R.drawable.black_image;
+    }
+
+    public void setHauteur(int hauteur) {
+        this.hauteur = hauteur;
     }
 
     @Override

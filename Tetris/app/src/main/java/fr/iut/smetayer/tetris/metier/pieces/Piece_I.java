@@ -25,7 +25,7 @@ public class Piece_I extends Piece {
 
     @Override
     public void down() {
-
+        if (canGoDown()) setHauteur(getHauteur() - 1);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class Piece_I extends Piece {
 
     @Override
     public boolean canGoDown() {
-        return false;
+        return getHauteur() > 0;
     }
 }

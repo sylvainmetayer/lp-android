@@ -1,15 +1,21 @@
 package fr.iut.smetayer.tetris.metier;
 
 import android.util.Log;
+import android.widget.Adapter;
+import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Game {
     private int[][] gameboard;
+    private ArrayList<Piece> pieces;
+    private ListAdapter adapters;
 
     public Game(ArrayList<Piece> pieces, int nb_lines, int nb_columns) {
 
+        this.pieces = pieces;
         gameboard = new int[nb_lines][nb_columns];
 
         // Initialize with empty values.
@@ -37,7 +43,10 @@ public class Game {
             }
         }
         Log.d("GAMEBOARD_INIT", "GameBoard " + Arrays.deepToString(gameboard));
+    }
 
+    public void setAdapters(ListAdapter adapters) {
+        this.adapters = adapters;
     }
 
     public Integer[] getGameboard() {
@@ -52,5 +61,26 @@ public class Game {
         }
         Log.i("GAMEBOARD_INIT", Arrays.toString(newArray));
         return newArray;
+    }
+
+    public void loop() {
+        Piece lastPiece = pieces.get(pieces.size() - 1);
+        while (lastPiece.canGoDown()) {
+            Piece bck = lastPiece;
+            lastPiece.down();
+            updateGameboard(bck, lastPiece);
+            this.adapters.notifyAll();
+            // + modifier le tableau
+            // + setModified sur l'adapter
+
+            // TODO Handle user input to rotate piece
+        }
+        // Créer une nouvelle piece
+        // L'ajouter
+        // Rappeler loop
+    }
+
+    private void updateGameboard(Piece originalPiece, Piece modifiedPiece) {
+        // TODO
     }
 }
