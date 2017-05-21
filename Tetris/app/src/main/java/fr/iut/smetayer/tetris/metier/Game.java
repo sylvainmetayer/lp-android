@@ -1,11 +1,17 @@
 package fr.iut.smetayer.tetris.metier;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import fr.iut.smetayer.tetris.MainActivity;
+import fr.iut.smetayer.tetris.OnSwipeTouchListener;
+import fr.iut.smetayer.tetris.R;
 
 public class Game {
     private int[][] gameboard;
@@ -89,8 +95,36 @@ public class Game {
         }
     }
 
-    public void loop(MainActivity activity) {
+    public void loop(final MainActivity activity) {
         Piece lastPiece = this.getLastPiece();
+
+        GridView gridView = (GridView) activity.findViewById(R.id.grid);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(activity, "click", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        gridView.setOnTouchListener(new OnSwipeTouchListener(activity) {
+            public void onSwipeTop() {
+                Toast.makeText(activity, "top", Toast.LENGTH_LONG).show();
+            }
+
+            public void onSwipeRight() {
+                Toast.makeText(activity, "right", Toast.LENGTH_LONG).show();
+            }
+
+            public void onSwipeLeft() {
+                Toast.makeText(activity, "left", Toast.LENGTH_LONG).show();
+            }
+
+            public void onSwipeBottom() {
+                Toast.makeText(activity, "bottom", Toast.LENGTH_LONG).show();
+            }
+
+        });
+
         while (lastPiece.canGoDown()) {
             int oldStartLine = lastPiece.getStartLine();
             int oldStartColumn = lastPiece.getStartColumn();
