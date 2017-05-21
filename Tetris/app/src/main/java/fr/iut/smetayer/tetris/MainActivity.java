@@ -2,7 +2,6 @@ package fr.iut.smetayer.tetris;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -14,15 +13,19 @@ import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Game gameboard;
+    private MyAdapter adapter;
+    private GridView layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int nb_columns = getResources().getInteger(R.integer.column);
-        int nb_lines = getResources().getInteger(R.integer.lines);
+        int nb_columns = getResources().getInteger(R.integer.maxColumns);
+        int nb_lines = getResources().getInteger(R.integer.maxLines);
 
-        GridView layout = (GridView) findViewById(R.id.grid);
+        layout = (GridView) findViewById(R.id.grid);
         List<Piece> datas = new ArrayList<>();
 
         int[][] matrice =
@@ -30,22 +33,18 @@ public class MainActivity extends AppCompatActivity {
                         {0, 1, 1},
                         {1, 1}
                 };
-        Piece start_piece = new Piece_I(2, 3, matrice, 0, 0);
+        Piece start_piece = new Piece_I(2, 3, matrice, 0, 0, this);
         datas.add(start_piece);
-        /*
-        int [][] matrice2 =
-        {
-                {1,1,1,1,1}
-        };
-        Piece piece_large = new Piece_I(1, 5, matrice2, 4,5);
-        datas.add(piece_large);
-        */
 
-        Game gameboard = new Game((ArrayList<Piece>) datas, nb_lines, nb_columns);
-        MyAdapter adapter = new MyAdapter(MainActivity.this, R.layout.item, gameboard.getGameboard());
+        gameboard = new Game((ArrayList<Piece>) datas, nb_lines, nb_columns);
+        adapter = new MyAdapter(MainActivity.this, R.layout.item, gameboard.getGameboard());
         layout.setAdapter(adapter);
-        gameboard.setAdapters(layout.getAdapter());
-        gameboard.loop();
 
+        if (true) // TODO Remove this debug condition
+            gameboard.loop(this);
+    }
+
+    public void refresh() {
+        adapter.notifyDataSetChanged();
     }
 }

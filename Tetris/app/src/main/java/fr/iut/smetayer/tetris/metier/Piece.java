@@ -1,6 +1,11 @@
 package fr.iut.smetayer.tetris.metier;
 
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import fr.iut.smetayer.tetris.R;
 
@@ -9,41 +14,35 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     private int hauteur;
     private int largeur;
     private int[][] matrice;
-    private int pos_i;
-    private int pos_j;
+    private int startLine;
+    private int startColumn;
     private int color;
+    private Context context;
 
-    public Piece(int hauteur, int largeur, int[][] matrice, int pos_i, int pos_j, int color) {
+    public Piece(int hauteur, int largeur, int[][] matrice, int line, int column, int color, Context context) {
         this.hauteur = hauteur;
         this.largeur = largeur;
         this.matrice = matrice;
-        this.pos_i = pos_i;
-        this.pos_j = pos_j;
+        this.startLine = line;
+        this.startColumn = column;
         this.color = color;
+        this.context = context;
     }
 
-    public int getHauteur() {
-        return hauteur;
-    }
-
-    public int getLargeur() {
-        return largeur;
+    public Context getContext() {
+        return context;
     }
 
     public int[][] getMatrice() {
         return matrice;
     }
 
-    public int getLine() {
-        return pos_i;
+    public int getStartLine() {
+        return startLine;
     }
 
-    public int getColumn() {
-        return pos_j;
-    }
-
-    public int getColor() {
-        return color;
+    public int getStartColumn() {
+        return startColumn;
     }
 
     public static int getImage(int value) {
@@ -56,12 +55,20 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return R.drawable.black_image;
     }
 
-    public void setHauteur(int hauteur) {
-        this.hauteur = hauteur;
+    public void setStartLine(int startLine) {
+        this.startLine = startLine;
     }
 
     @Override
     public String toString() {
-        return "Hauteur : " + hauteur + ", Largeur : " + largeur + ", pos_i : " + pos_i + ", pos_j : " + pos_j + ", color : " + color;
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append("Hauteur : ").append(hauteur).append(", ");
+        sb.append("Largeur : ").append(largeur).append("\n");
+        sb.append("Matrice : ").append(Arrays.deepToString(matrice)).append("\n");
+        sb.append("startLine : ").append(startLine).append(", ");
+        sb.append("startColumn : ").append(startColumn).append(", ");
+        sb.append("Color : ").append(color);
+        return sb.toString();
     }
 }

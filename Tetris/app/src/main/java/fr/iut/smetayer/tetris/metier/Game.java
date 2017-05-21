@@ -1,17 +1,15 @@
 package fr.iut.smetayer.tetris.metier;
 
 import android.util.Log;
-import android.widget.Adapter;
-import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
+import fr.iut.smetayer.tetris.MainActivity;
 
 public class Game {
     private int[][] gameboard;
     private ArrayList<Piece> pieces;
-    private ListAdapter adapters;
 
     public Game(ArrayList<Piece> pieces, int nb_lines, int nb_columns) {
 
@@ -19,34 +17,30 @@ public class Game {
         gameboard = new int[nb_lines][nb_columns];
 
         // Initialize with empty values.
-        for (int i = 0; i < gameboard.length; i++) {
-            for (int j = 0; j < gameboard[i].length; j++) {
-                gameboard[i][j] = 0;
+        for (int line = 0; line < gameboard.length; line++) {
+            for (int column = 0; column < gameboard[line].length; column++) {
+                gameboard[line][column] = 0;
             }
         }
 
         for (Piece piece : pieces) {
-            int column = piece.getLine();
-            int line = piece.getColumn();
+            int column = piece.getStartLine();
+            int line = piece.getStartColumn();
             int[][] matrice = piece.getMatrice();
-            Log.d("GAMEBOARD_INIT", "The piece start at [C:" + column + ",L:" + line + "]");
-            Log.d("GAMEBOARD_INIT", "Matrice " + Arrays.deepToString(matrice));
+            Log.d("INIT", "The piece start at [C:" + column + ",L:" + line + "]");
+            Log.d("INIT", "Matrice " + Arrays.deepToString(matrice));
 
-            for (int i = 0; i < matrice.length; i++) {
-                for (int j = 0; j < matrice[i].length; j++) {
-                    int matriceValue = matrice[i][j];
-                    int pieceI = i + column;
-                    int pieceJ = j + line;
-                    Log.d("GAMEBOARD_INIT", "I will affect the value '" + matriceValue + "' to the position [" + pieceI + "," + pieceJ + "] of the gameboard");
-                    gameboard[pieceI][pieceJ] = matriceValue;
+            for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+                for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                    int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+                    int pieceColumn = matriceColumnIterator + column;
+                    int pieceLine = matriceLineIterator + line;
+                    Log.d("INIT", "I will affect the value '" + matriceValue + "' to the position [" + pieceLine + "," + pieceColumn + "] ");
+                    gameboard[pieceLine][pieceColumn] = matriceValue;
                 }
             }
         }
-        Log.d("GAMEBOARD_INIT", "GameBoard " + Arrays.deepToString(gameboard));
-    }
-
-    public void setAdapters(ListAdapter adapters) {
-        this.adapters = adapters;
+        Log.d("INIT", "GameBoard " + Arrays.deepToString(gameboard));
     }
 
     public Integer[] getGameboard() {
@@ -56,31 +50,87 @@ public class Game {
             int[] row = gameboard[i];
             for (int j = 0; j < row.length; j++) {
                 int number = gameboard[i][j];
-                newArray[i * row.length + j] = Integer.valueOf(number);
+                newArray[i * row.length + j] = number;
             }
         }
-        Log.i("GAMEBOARD_INIT", Arrays.toString(newArray));
+        Log.i("GET_GAME_BOARD", Arrays.toString(newArray));
         return newArray;
     }
 
-    public void loop() {
-        Piece lastPiece = pieces.get(pieces.size() - 1);
-        while (lastPiece.canGoDown()) {
-            Piece bck = lastPiece;
-            lastPiece.down();
-            updateGameboard(bck, lastPiece);
-            this.adapters.notifyAll();
-            // + modifier le tableau
-            // + setModified sur l'adapter
-
-            // TODO Handle user input to rotate piece
+    private void removePieceFromGameBoard(int startLine, int startColumn, int[][] matrice) {
+        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                int matriceValue = 0;
+                int pieceColumn = matriceColumnIterator + startColumn;
+                int pieceLine = matriceLineIterator + startLine;
+                Log.d("REMOVE_PIECE", "set 0 on  the position [" + pieceLine + "," + pieceColumn + "] ");
+                gameboard[pieceLine][pieceColumn] = matriceValue;
+            }
         }
+    }
+
+    private void addPieceToGameBoard(Piece piece) {
+        int column = piece.getStartColumn();
+        int line = piece.getStartLine();
+        int[][] matrice = piece.getMatrice();
+
+        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+                int pieceColumn = matriceColumnIterator + column;
+                int pieceLine = matriceLineIterator + line;
+                // FIXME Error on loop, pieceLine is equals to MaxLines which causes an IndexOutOfBoundException
+                Log.d("DETAILS", String.valueOf(matriceLineIterator));
+                Log.d("DETAILS", String.valueOf(line));
+                Log.d("DETAILS", "------");
+                Log.d("REMOVE_PIECE", "affect value '" + matriceValue + "' on  the position [" + pieceLine + "," + pieceColumn + "] ");
+                gameboard[pieceLine][pieceColumn] = matriceValue;
+            }
+        }
+    }
+
+    public void loop(MainActivity activity) {
+        Piece lastPiece = this.getLastPiece();
+        while (lastPiece.canGoDown()) {
+            int oldStartLine = lastPiece.getStartLine();
+            int oldStartColumn = lastPiece.getStartColumn();
+            int[][] oldMatrice = lastPiece.getMatrice();
+            Log.d("STATE_BEFORE", lastPiece.toString());
+
+            // Update piece state, gameboard, and UI
+            lastPiece.down();
+            this.updateGameboard(oldStartLine, oldStartColumn, oldMatrice, lastPiece);
+            activity.refresh();
+
+            Log.d("STATE_AFTER", lastPiece.toString());
+            // TODO Handle user input
+        }
+
+        Log.d("GBOARD", this.logGameboard());
+        activity.refresh();
+
         // Créer une nouvelle piece
         // L'ajouter
         // Rappeler loop
     }
 
-    private void updateGameboard(Piece originalPiece, Piece modifiedPiece) {
-        // TODO
+    private Piece getLastPiece() {
+        return pieces.get(pieces.size() - 1);
+    }
+
+    private String logGameboard() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < gameboard.length; i++) {
+            for (int j = 0; j < gameboard[i].length; j++) {
+                sb.append(gameboard[i][j]).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    private void updateGameboard(int oldStartLine, int oldStartColumn, int[][] oldMatrice, Piece modifiedPiece) {
+        removePieceFromGameBoard(oldStartLine, oldStartColumn, oldMatrice);
+        addPieceToGameBoard(modifiedPiece);
     }
 }
