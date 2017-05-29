@@ -1,5 +1,6 @@
 package fr.iut.smetayer.tetris.metier;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import fr.iut.smetayer.tetris.MainActivity;
 import fr.iut.smetayer.tetris.MyAdapter;
 import fr.iut.smetayer.tetris.OnSwipeTouchListener;
+import fr.iut.smetayer.tetris.OnSwipeTouchListenerImpl;
 import fr.iut.smetayer.tetris.R;
 import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
 
@@ -108,24 +110,21 @@ public class Game {
             }
         });
 
-        gridView.setOnTouchListener(new OnSwipeTouchListener(activity) {
-            public void onSwipeTop() {
-                Toast.makeText(activity, "top", Toast.LENGTH_SHORT).show();
-            }
+        gridView.setOnTouchListener(new OnSwipeTouchListenerImpl(activity));
 
-            public void onSwipeRight() {
-                Toast.makeText(activity, "right", Toast.LENGTH_SHORT).show();
-            }
+        Handler handler = new Handler();
 
-            public void onSwipeLeft() {
-                Toast.makeText(activity, "left", Toast.LENGTH_SHORT).show();
+        final Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                activity.refresh();
             }
-
-            public void onSwipeBottom() {
-                Toast.makeText(activity, "bottom", Toast.LENGTH_SHORT).show();
-            }
-
-        });
+        };
 
         while (lastPiece.canGoDown()) {
             int oldStartLine = lastPiece.getStartLine();
@@ -136,7 +135,7 @@ public class Game {
             // Update piece state, gameboard, and UI
             lastPiece.down();
             this.updateGameboard(oldStartLine, oldStartColumn, oldMatrice, lastPiece);
-            activity.refresh();
+            handler.postDelayed(r, 1000);
 
 
             Log.d("STATE_AFTER", lastPiece.toString());
@@ -145,7 +144,19 @@ public class Game {
 
         Log.d("GBOARD", this.logGameboard());
         activity.refresh();
-        
+        // Création d'une nouvelle piece
+        int[][] matrice =
+                {
+                        {0, 1, 1},
+                        {1, 1}
+                };
+        Piece start_piece = new Piece_I(2, 3, matrice, 0, 0, activity);
+
+        // Ajout de la nouvelle piece sur le plateau et à la liste des pieces.
+        addPieceToGameBoard(start_piece);
+        pieces.add(start_piece);
+
+        Log.d("GBOARD", this.logGameboard());
         // Créer une nouvelle piece
         // L'ajouter
         // Rappeler loop
