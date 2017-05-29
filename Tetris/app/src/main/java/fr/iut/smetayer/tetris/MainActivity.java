@@ -2,6 +2,9 @@ package fr.iut.smetayer.tetris;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private Game gameboard;
     private MyAdapter adapter;
     private GridView layout;
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,22 @@ public class MainActivity extends AppCompatActivity {
         datas.add(start_piece);
 
         gameboard = new Game((ArrayList<Piece>) datas, nb_lines, nb_columns);
+
+        final Button pause = (Button) findViewById(R.id.pause);
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameboard.togglePause();
+                if (gameboard.isPause()) {
+                    pause.setText(getResources().getString(R.string.pause));
+                } else {
+                    pause.setText(getResources().getString(R.string.restart));
+                }
+            }
+        });
+
+        editText = (EditText) findViewById(R.id.score);
+
         adapter = new MyAdapter(MainActivity.this, R.layout.item, gameboard.getGameboard());
         layout.setAdapter(adapter);
 
@@ -52,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 //adapter.clear();
                 // adapter.addAll(gameboard.getGameboard()); // Crash the app
                 layout.setAdapter(new MyAdapter(MainActivity.this, R.layout.item, gameboard.getGameboard()));
+                editText.setText(gameboard.getScore());
             }
         });
     }

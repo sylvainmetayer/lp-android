@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import fr.iut.smetayer.tetris.MainActivity;
-import fr.iut.smetayer.tetris.MyAdapter;
-import fr.iut.smetayer.tetris.OnSwipeTouchListener;
 import fr.iut.smetayer.tetris.OnSwipeTouchListenerImpl;
 import fr.iut.smetayer.tetris.R;
 import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
@@ -20,11 +18,15 @@ import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
 public class Game {
     private int[][] gameboard;
     private ArrayList<Piece> pieces;
+    private boolean pause;
+    private int score;
 
     public Game(ArrayList<Piece> pieces, int nb_lines, int nb_columns) {
 
         this.pieces = pieces;
         gameboard = new int[nb_lines][nb_columns];
+        this.pause = false;
+        this.score = 0;
 
         // Initialize with empty values.
         for (int line = 0; line < gameboard.length; line++) {
@@ -127,19 +129,20 @@ public class Game {
         };
 
         while (lastPiece.canGoDown()) {
-            int oldStartLine = lastPiece.getStartLine();
-            int oldStartColumn = lastPiece.getStartColumn();
-            int[][] oldMatrice = lastPiece.getMatrice();
-            Log.d("STATE_BEFORE", lastPiece.toString());
+            if (!this.isPause()) {
+                int oldStartLine = lastPiece.getStartLine();
+                int oldStartColumn = lastPiece.getStartColumn();
+                int[][] oldMatrice = lastPiece.getMatrice();
+                Log.d("STATE_BEFORE", lastPiece.toString());
 
-            // Update piece state, gameboard, and UI
-            lastPiece.down();
-            this.updateGameboard(oldStartLine, oldStartColumn, oldMatrice, lastPiece);
-            handler.postDelayed(r, 1000);
+                // Update piece state, gameboard, and UI
+                lastPiece.down();
+                this.updateGameboard(oldStartLine, oldStartColumn, oldMatrice, lastPiece);
+                handler.postDelayed(r, 1000);
 
-
-            Log.d("STATE_AFTER", lastPiece.toString());
-            // TODO Handle user input
+                Log.d("STATE_AFTER", lastPiece.toString());
+                // TODO Handle user input
+            }
         }
 
         Log.d("GBOARD", this.logGameboard());
@@ -180,5 +183,17 @@ public class Game {
     private void updateGameboard(int oldStartLine, int oldStartColumn, int[][] oldMatrice, Piece modifiedPiece) {
         removePieceFromGameBoard(oldStartLine, oldStartColumn, oldMatrice);
         addPieceToGameBoard(modifiedPiece);
+    }
+
+    public void togglePause() {
+        this.pause = !pause;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public String getScore() {
+        return "Score : " + score;
     }
 }
