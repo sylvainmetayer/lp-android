@@ -30,16 +30,21 @@ public class MyAdapter extends ArrayAdapter<Integer> {
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        View vi = convertView;
-        if (convertView == null)
-            vi = inflater.inflate(R.layout.item, null);
 
+        ImageView imageView;
+
+        if (convertView == null) {
+            imageView = new ImageView(mContext);
+            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(8, 8, 8, 8);
+        } else {
+            imageView = (ImageView) convertView;
+        }
         int data = getItem(position);
-        Log.d("GET_VIEW_ADAPTER", "Position : " + position);
-        Log.d("GET_VIEW_ADAPTER", "Data : " + data);
-        ImageView imageView = (ImageView) vi.findViewById(R.id.imageView);
         imageView.setImageResource(Piece.getImage(data));
-        return vi;
+        return imageView;
+
     }
 
 }

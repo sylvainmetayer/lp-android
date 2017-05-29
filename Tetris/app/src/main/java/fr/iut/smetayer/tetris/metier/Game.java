@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import fr.iut.smetayer.tetris.MainActivity;
+import fr.iut.smetayer.tetris.MyAdapter;
 import fr.iut.smetayer.tetris.OnSwipeTouchListener;
 import fr.iut.smetayer.tetris.R;
+import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
 
 public class Game {
     private int[][] gameboard;
@@ -102,25 +104,25 @@ public class Game {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(activity, "click", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "click", Toast.LENGTH_SHORT).show();
             }
         });
 
         gridView.setOnTouchListener(new OnSwipeTouchListener(activity) {
             public void onSwipeTop() {
-                Toast.makeText(activity, "top", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "top", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeRight() {
-                Toast.makeText(activity, "right", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "right", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeLeft() {
-                Toast.makeText(activity, "left", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "left", Toast.LENGTH_SHORT).show();
             }
 
             public void onSwipeBottom() {
-                Toast.makeText(activity, "bottom", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "bottom", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -136,13 +138,14 @@ public class Game {
             this.updateGameboard(oldStartLine, oldStartColumn, oldMatrice, lastPiece);
             activity.refresh();
 
+
             Log.d("STATE_AFTER", lastPiece.toString());
             // TODO Handle user input
         }
 
         Log.d("GBOARD", this.logGameboard());
         activity.refresh();
-
+        
         // Créer une nouvelle piece
         // L'ajouter
         // Rappeler loop

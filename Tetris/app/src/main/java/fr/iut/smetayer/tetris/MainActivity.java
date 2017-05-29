@@ -45,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refresh() {
-        adapter.notifyDataSetChanged();
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //adapter.notifyDataSetChanged();
+                //adapter.clear();
+                // adapter.addAll(gameboard.getGameboard()); // Crash the app
+                layout.setAdapter(new MyAdapter(MainActivity.this, R.layout.item, gameboard.getGameboard()));
+            }
+        });
     }
 }

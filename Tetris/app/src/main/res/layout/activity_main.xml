@@ -7,12 +7,10 @@
         android:id="@+id/grid"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:adjustViewBounds="true"
-        android:columnWidth="50dp"
         android:gravity="center"
-        android:listSelector="@android:color/transparent"
+        android:columnWidth="50dp"
         android:numColumns="@integer/maxColumns"
-        android:stretchMode="none">
+        android:stretchMode="columnWidth">
 
     </GridView>
 </RelativeLayout>
