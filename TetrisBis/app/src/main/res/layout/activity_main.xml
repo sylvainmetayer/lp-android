@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/pause"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/score"
-        android:layout_toRightOf="@+id/pause"
-        android:inputType="none"
-        android:editable="false"
-        android:text="@string/score"/>
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <GridView
-            android:id="@+id/grid"
+
+        <Button
+            android:id="@+id/pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:numColumns="@integer/maxColumns"
-            android:stretchMode="columnWidth">
-        </GridView>
-    </RelativeLayout>
+            android:text="@string/pause" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:inputType="none"
+            android:text="@string/score" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:numColumns="@integer/maxColumns"
+        android:stretchMode="columnWidth" />
+
+</LinearLayout>

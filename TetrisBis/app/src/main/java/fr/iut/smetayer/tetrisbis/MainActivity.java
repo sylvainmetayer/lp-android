@@ -1,8 +1,11 @@
 package fr.iut.smetayer.tetrisbis;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -26,12 +29,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenHeight = displayMetrics.heightPixels;
+        int screenWidth = displayMetrics.widthPixels;
+
         int nb_columns = getResources().getInteger(R.integer.maxColumns);
         int nb_lines = getResources().getInteger(R.integer.maxLines);
 
         layout = (GridView) findViewById(R.id.grid);
         List<Piece> datas = new ArrayList<>();
 
+        /*
+        ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
+        layoutParams.height = screenHeight - 200;
+        layout.setLayoutParams(layoutParams);
+*/
         int[][] matrice =
                 {
                         {0, 1, 1},
