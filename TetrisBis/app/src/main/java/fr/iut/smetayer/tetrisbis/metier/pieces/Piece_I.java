@@ -1,15 +1,13 @@
 package fr.iut.smetayer.tetrisbis.metier.pieces;
 
 import android.content.Context;
-import android.util.Log;
 
-import fr.iut.smetayer.tetrisbis.R;
 import fr.iut.smetayer.tetrisbis.metier.Piece;
 
 public class Piece_I extends Piece {
 
-    public Piece_I(int hauteur, int largeur, int[][] matrice, int pos_i, int pos_j, Context context) {
-        super(hauteur, largeur, matrice, pos_i, pos_j, 1, context);
+    public Piece_I(int[][] matrice, int line, int column, Context context) {
+        super(matrice, line, column, 1, context);
     }
 
     @Override
@@ -47,9 +45,5 @@ public class Piece_I extends Piece {
         return false;
     }
 
-    @Override
-    public boolean canGoDown() {
-        return getStartLine() + getMatrice().length < getContext().getResources().getInteger(R.integer.maxLines);
-    }
 
 }
