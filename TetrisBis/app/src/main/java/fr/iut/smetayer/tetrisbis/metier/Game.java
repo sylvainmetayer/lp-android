@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import fr.iut.smetayer.tetrisbis.MainActivity;
 import fr.iut.smetayer.tetrisbis.metier.pieces.Piece_I;
+import fr.iut.smetayer.tetrisbis.utils.Utils;
 
 public class Game {
     private int[][] gameboard;
@@ -29,7 +30,7 @@ public class Game {
             int line = piece.getStartLine();
             int[][] matrice = piece.getMatrice();
             Log.d("INIT", piece.toString());
-            Log.d("INIT", "The piece start at [C:" + column + ",L:" + line + "]");
+            Log.d("INIT", "The piece start at " + Utils.formatPosition(line, column));
             Log.d("INIT", "Matrice " + Arrays.deepToString(matrice));
 
             for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
@@ -37,12 +38,12 @@ public class Game {
                     int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
                     int pieceColumn = matriceColumnIterator + column;
                     int pieceLine = matriceLineIterator + line;
-                    Log.d("INIT", "I will affect the value '" + matriceValue + "' to the position [" + pieceLine + "," + pieceColumn + "] ");
+                    Log.d("INIT", "I will affect the value '" + matriceValue + "' at " + Utils.formatPosition(pieceLine, pieceColumn));
                     gameboard[pieceLine][pieceColumn] = matriceValue;
                 }
             }
         }
-        Log.d("INIT", "GameBoard " + Arrays.deepToString(gameboard));
+        Log.d("INIT_ENDED", logGameboard());
     }
 
     private void resetGame() {
@@ -73,7 +74,7 @@ public class Game {
                 int matriceValue = 0;
                 int pieceColumn = matriceColumnIterator + startColumn;
                 int pieceLine = matriceLineIterator + startLine;
-                Log.d("REMOVE_PIECE", "set 0 on  the position [" + pieceLine + "," + pieceColumn + "] ");
+                Log.d("REMOVE_PIECE", "set 0 at " + Utils.formatPosition(pieceLine, pieceColumn));
                 gameboard[pieceLine][pieceColumn] = matriceValue;
             }
         }
@@ -89,11 +90,7 @@ public class Game {
                 int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
                 int pieceColumn = matriceColumnIterator + column;
                 int pieceLine = matriceLineIterator + line;
-                // FIXME Error on performAction, pieceLine is equals to MaxLines which causes an IndexOutOfBoundException
-                Log.d("DETAILS", String.valueOf(matriceLineIterator));
-                Log.d("DETAILS", String.valueOf(line));
-                Log.d("DETAILS", "------");
-                Log.d("REMOVE_PIECE", "affect value '" + matriceValue + "' on  the position [" + pieceLine + "," + pieceColumn + "] ");
+                Log.d("ADD_PIECE", "affect value '" + matriceValue + "' at " + Utils.formatPosition(pieceLine, pieceColumn));
                 gameboard[pieceLine][pieceColumn] = matriceValue;
             }
         }
@@ -104,7 +101,7 @@ public class Game {
 
         Log.d("LAST_PIECE", lastPiece.toString());
 
-        if (lastPiece.canGoDown() && lastPiece.canGoDown(gameboard) && !this.isPause()) {
+        if (lastPiece.canGoDown(gameboard, this) && !this.isPause()) {
             // Piece is currently going down
             int oldStartLine = lastPiece.getStartLine();
             int oldStartColumn = lastPiece.getStartColumn();
@@ -117,11 +114,10 @@ public class Game {
         } else {
             Log.d("PERFORM", "Creation of a new piece because the previous one couldn't go down anymore (previous piece printed below)");
             Log.d("PERFORM", lastPiece.toString());
-            // All pieces are already down, let's create a new one
             int[][] matrice =
                     {
                             {0, 1, 1},
-                            {1, 1}
+                            {1, 1, 0}
                     };
             Piece start_piece = new Piece_I(matrice, 0, 0, activity);
 
@@ -137,11 +133,11 @@ public class Game {
         return pieces.get(pieces.size() - 1);
     }
 
-    private String logGameboard() {
+    String logGameboard() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < gameboard.length; i++) {
-            for (int j = 0; j < gameboard[i].length; j++) {
-                sb.append(gameboard[i][j]).append(" ");
+        for (int[] aGameboard : gameboard) {
+            for (int anAGameboard : aGameboard) {
+                sb.append(anAGameboard).append(" ");
             }
             sb.append("\n");
         }

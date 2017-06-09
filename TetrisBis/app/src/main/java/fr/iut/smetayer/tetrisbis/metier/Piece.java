@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 import fr.iut.smetayer.tetrisbis.R;
+import fr.iut.smetayer.tetrisbis.utils.Utils;
 
 public abstract class Piece implements Mouvement, MouvementPossible {
 
@@ -67,7 +68,8 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return getStartLine() + getMatrice().length < getContext().getResources().getInteger(R.integer.maxLines);
     }
 
-    public boolean canGoDown(int[][] gameboard) {
+    public boolean canGoDown(int[][] gameboard, Game game) {
+
         if (!canGoDown())
             return false;
 
@@ -76,32 +78,36 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         int[][] matrice = this.getMatrice();
         int pieceLine = (matrice.length - 1) + line;
         Log.d("CANGODOWN", "START !");
-        Log.d("CANGODOWN", String.valueOf((matrice.length - 1)));
         Log.d("CANGODOWN", this.toString());
+
         for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
             for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
                 int pieceColumn = matriceColumnIterator + column;
-                // FIXME If the last piece is 0 but on different level (hauteur / largeur), random behaviour
-                int matriceValue = matrice[pieceLine][pieceColumn];
-                
-                while (matriceValue == getEmptyPiece()) {
-                    pieceColumn = pieceColumn - 1;
-                    matriceValue = matrice[pieceLine][pieceColumn];
+
+                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+
+                if (matriceValue == getEmptyPieceValue()) {
+                    continue;
                 }
 
-                Log.d("CANGODOWN", "LINE : " + pieceLine + " COLUMN  " + pieceColumn);
+                String logMessage = "We are testing the " + Utils.formatPosition(matriceLineIterator, matriceColumnIterator) + " of the matrice, which is " + matriceValue + ". " +
+                        "This matrice position correspond to the " + Utils.formatPosition(pieceLine, pieceColumn) + " of the game";
+                Log.d("CANGODOWN", logMessage);
+
                 // Check every last line of matrice of the piece, for every column
                 if (pieceLine + 1 >= gameboard.length) {
                     Log.d("CANGODOWN", "Out of boundary, continue");
                     continue;
                 }
 
-
-                if (gameboard[pieceLine + 1][pieceColumn] != getEmptyPiece()) {
+                if (gameboard[pieceLine + 1][pieceColumn] != getEmptyPieceValue()) {
+                    Log.d("CANGODOWN", game.logGameboard());
                     Log.d("CANGODOWN", "The position [" + (pieceLine + 1) + "," + pieceColumn + "] is not empty !");
                     return false;
                 }
 
+                Log.d("CANGODOWN", "The position [" + matriceLineIterator + "," + matriceColumnIterator + "] of the matrice can go down");
+                Log.d("CANGODOWN", "It means that the position [" + (pieceLine + 1) + "," + pieceColumn + "] is available on the gameboard");
 
             }
         }
@@ -126,7 +132,7 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return sb.toString();
     }
 
-    public static int getEmptyPiece() {
+    public static int getEmptyPieceValue() {
         return 0;
     }
 
