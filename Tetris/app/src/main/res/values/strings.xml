@@ -3,4 +3,5 @@
     <string name="pause">Pause</string>
     <string name="score">Score : 0</string>
     <string name="restart">Reprendre</string>
+    <string name="start">Commencer</string>
 </resources>

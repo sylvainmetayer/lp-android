@@ -3,12 +3,11 @@ package fr.iut.smetayer.tetris;
 import android.content.Context;
 import android.widget.Toast;
 
-/**
- * Created by Sylvain on 29/05/2017.
- */
+import fr.iut.smetayer.tetris.metier.Game;
 
 public class OnSwipeTouchListenerImpl extends OnSwipeTouchListener {
     private Context context;
+    private Game game;
 
     public OnSwipeTouchListenerImpl(Context ctx) {
         super(ctx);

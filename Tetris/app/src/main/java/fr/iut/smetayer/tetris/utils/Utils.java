@@ -1,4 +1,4 @@
-package fr.iut.smetayer.tetrisbis.utils;
+package fr.iut.smetayer.tetris.utils;
 
 /**
  * Created by Sylvain on 09/06/2017.
