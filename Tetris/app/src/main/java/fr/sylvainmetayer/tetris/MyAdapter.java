@@ -1,4 +1,4 @@
-package fr.iut.smetayer.tetris;
+package fr.sylvainmetayer.tetris;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import fr.iut.smetayer.tetris.metier.Piece;
+import fr.sylvainmetayer.tetris.metier.Piece;
 
 public class MyAdapter extends ArrayAdapter<Integer> {
 

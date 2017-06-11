@@ -1,4 +1,4 @@
-package fr.iut.smetayer.tetris.metier;
+package fr.sylvainmetayer.tetris.metier;
 
 interface Mouvement {
 

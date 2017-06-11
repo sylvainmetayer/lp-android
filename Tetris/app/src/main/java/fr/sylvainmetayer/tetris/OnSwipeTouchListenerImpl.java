@@ -1,9 +1,9 @@
-package fr.iut.smetayer.tetris;
+package fr.sylvainmetayer.tetris;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import fr.iut.smetayer.tetris.metier.Game;
+import fr.sylvainmetayer.tetris.metier.Game;
 
 public class OnSwipeTouchListenerImpl extends OnSwipeTouchListener {
     private Context context;

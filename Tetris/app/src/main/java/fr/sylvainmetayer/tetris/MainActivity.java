@@ -1,4 +1,4 @@
-package fr.iut.smetayer.tetris;
+package fr.sylvainmetayer.tetris;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fr.iut.smetayer.tetris.metier.Game;
-import fr.iut.smetayer.tetris.metier.Piece;
-import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
+import fr.sylvainmetayer.tetris.metier.Game;
+import fr.sylvainmetayer.tetris.metier.Piece;
+import fr.sylvainmetayer.tetris.metier.pieces.Piece_I;
 
 public class MainActivity extends AppCompatActivity {
 

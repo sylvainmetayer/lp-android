@@ -1,12 +1,12 @@
-package fr.iut.smetayer.tetris.metier;
+package fr.sylvainmetayer.tetris.metier;
 
 import android.content.Context;
 import android.util.Log;
 
 import java.util.Arrays;
 
-import fr.iut.smetayer.tetris.R;
-import fr.iut.smetayer.tetris.utils.Utils;
+import fr.sylvainmetayer.tetris.R;
+import fr.sylvainmetayer.tetris.utils.Utils;
 
 public abstract class Piece implements Mouvement, MouvementPossible {
 

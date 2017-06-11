@@ -1,4 +1,4 @@
-package fr.iut.smetayer.tetris;
+package fr.sylvainmetayer.tetris;
 
 import android.content.Context;
 import android.view.GestureDetector;

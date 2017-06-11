@@ -1,4 +1,4 @@
-package fr.iut.smetayer.tetris.utils;
+package fr.sylvainmetayer.tetris.utils;
 
 /**
  * Created by Sylvain on 09/06/2017.

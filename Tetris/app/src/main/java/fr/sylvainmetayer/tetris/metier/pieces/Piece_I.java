@@ -1,8 +1,8 @@
-package fr.iut.smetayer.tetris.metier.pieces;
+package fr.sylvainmetayer.tetris.metier.pieces;
 
 import android.content.Context;
 
-import fr.iut.smetayer.tetris.metier.Piece;
+import fr.sylvainmetayer.tetris.metier.Piece;
 
 public class Piece_I extends Piece {
 

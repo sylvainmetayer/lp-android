@@ -1,13 +1,13 @@
-package fr.iut.smetayer.tetris.metier;
+package fr.sylvainmetayer.tetris.metier;
 
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import fr.iut.smetayer.tetris.MainActivity;
-import fr.iut.smetayer.tetris.metier.pieces.Piece_I;
-import fr.iut.smetayer.tetris.utils.Utils;
+import fr.sylvainmetayer.tetris.MainActivity;
+import fr.sylvainmetayer.tetris.metier.pieces.Piece_I;
+import fr.sylvainmetayer.tetris.utils.Utils;
 
 public class Game {
     private int[][] gameboard;
