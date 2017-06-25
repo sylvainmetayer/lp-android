@@ -119,6 +119,10 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         this.startLine = startLine;
     }
 
+    public void setStartColumn(int startColumn) {
+        this.startColumn = startColumn;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb;

@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Game game;
     private GridView layout;
-    private EditText editText;
+    private TextView scoreBox;
+    private Button left, right;
 
     private ArrayList<Piece> datas;
 
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
         int nb_lines = getResources().getInteger(R.integer.maxLines);
 
         layout = (GridView) findViewById(R.id.grid);
-        editText = (EditText) findViewById(R.id.score);
+        scoreBox = (TextView) findViewById(R.id.score);
+        left = (Button) findViewById(R.id.left);
+        right = (Button) findViewById(R.id.right);
 
 
         initDatas();
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 //adapter.notifyDataSetChanged(); // Isn't working :(
                 layout.setAdapter(new MyAdapter(MainActivity.this, R.layout.item, game.getGameboard()));
-                editText.setText(game.getScore());
+                scoreBox.setText(game.getScore());
             }
         });
     }
@@ -92,6 +95,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         layout.setOnTouchListener(new OnSwipeTouchListenerImpl(this));
+
+        right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                game.goRight();
+                refresh();
+            }
+        });
+
+        left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                game.goLeft();
+                refresh();
+            }
+        });
     }
 
     public void initDatas() {
@@ -102,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         {1},
                         {1}
                 };
-        Piece start_piece = new Piece_I(matrice, 0, 2, this);
+        Piece start_piece = new Piece_I(matrice, 0, 9, this);
         datas.add(start_piece);
     }
 }

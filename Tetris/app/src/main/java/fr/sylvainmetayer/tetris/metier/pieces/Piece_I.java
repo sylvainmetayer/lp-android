@@ -17,12 +17,12 @@ public class Piece_I extends Piece {
 
     @Override
     public void left() {
-
+        setStartColumn(getStartColumn() - 1);
     }
 
     @Override
     public void right() {
-
+        setStartColumn(getStartColumn() + 1);
     }
 
     @Override
@@ -37,12 +37,12 @@ public class Piece_I extends Piece {
 
     @Override
     public boolean canGoLeft() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean canGoRight() {
-        return false;
+        return true;
     }
 
 

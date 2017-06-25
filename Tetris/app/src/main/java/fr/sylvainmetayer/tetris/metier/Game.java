@@ -80,7 +80,7 @@ public class Game {
         }
     }
 
-    private void addPieceToGameBoard(Piece piece) {
+    private boolean addPieceToGameBoard(Piece piece) {
         int column = piece.getStartColumn();
         int line = piece.getStartLine();
         int[][] matrice = piece.getMatrice();
@@ -91,9 +91,16 @@ public class Game {
                 int pieceColumn = matriceColumnIterator + column;
                 int pieceLine = matriceLineIterator + line;
                 Log.d("ADD_PIECE", "affect value '" + matriceValue + "' at " + Utils.formatPosition(pieceLine, pieceColumn));
+
+
+                if (gameboard[pieceLine][pieceColumn] != Piece.getEmptyPieceValue())
+                    return false;
+
                 gameboard[pieceLine][pieceColumn] = matriceValue;
             }
         }
+
+        return true;
     }
 
     public void performAction(final MainActivity activity) {
@@ -103,31 +110,63 @@ public class Game {
 
         if (lastPiece.canGoDown(gameboard, this) && !this.isPause()) {
             // Piece is currently going down
-            int oldStartLine = lastPiece.getStartLine();
-            int oldStartColumn = lastPiece.getStartColumn();
-            int[][] oldMatrice = lastPiece.getMatrice();
             Log.d("STATE_BEFORE", lastPiece.toString());
+            this.moveDown(lastPiece);
             lastPiece.down();
-            this.updateGameboard(oldStartLine, oldStartColumn, oldMatrice, lastPiece);
             Log.d("STATE_AFTER", lastPiece.toString());
-            // TODO Handle user input
+            checkLines(lastPiece);
         } else {
             Log.d("PERFORM", "Creation of a new piece because the previous one couldn't go down anymore (previous piece printed below)");
             Log.d("PERFORM", lastPiece.toString());
             int[][] matrice =
                     {
-                            {0, 1, 1},
-                            {1, 1, 0}
+                            {1, 1, 1, 1, 1, 1, 1, 1, 1},
                     };
             Piece start_piece = new Piece_I(matrice, 0, 0, activity);
 
             // Ajout de la nouvelle piece sur le plateau et à la liste des pieces.
-            addPieceToGameBoard(start_piece);
+            if (!addPieceToGameBoard(start_piece)) // Can't add piece, game over
+                endGame();
             pieces.add(start_piece);
         }
 
         Log.d("GBOARD", this.logGameboard());
     }
+
+    /**
+     * This method is used to remove full lines
+     *
+     * @param piece The current piece
+     */
+    private void checkLines(Piece piece) {
+        // FIXME TODO
+        /*
+        for (int gameLineIterator = 0; gameLineIterator < gameboard.length; gameLineIterator++) {
+            int cpt = 0;
+            for (int gameColumnIterator = 0; gameColumnIterator < gameboard[gameLineIterator].length; gameColumnIterator++) {
+                int pieceValue = gameboard[gameLineIterator][gameColumnIterator];
+
+                if (pieceValue != Piece.getEmptyPieceValue())
+                    cpt++;
+            }
+
+            if (cpt == gameboard[gameLineIterator].length) {
+                // Line is full
+
+                for (int gameColumnIterator = 0; gameColumnIterator < gameboard[gameLineIterator].length; gameColumnIterator++) {
+
+                    gameboard[gameLineIterator][gameColumnIterator] = Piece.getEmptyPieceValue();
+                    score += cpt;
+                }
+            }
+        }*/
+    }
+
+    private void endGame() {
+        // TODO
+        this.togglePause();
+    }
+
 
     private Piece getLastPiece() {
         return pieces.get(pieces.size() - 1);
@@ -144,11 +183,6 @@ public class Game {
         return sb.toString();
     }
 
-    private void updateGameboard(int oldStartLine, int oldStartColumn, int[][] oldMatrice, Piece modifiedPiece) {
-        removePieceFromGameBoard(oldStartLine, oldStartColumn, oldMatrice);
-        addPieceToGameBoard(modifiedPiece);
-    }
-
     public void togglePause() {
         this.pause = !pause;
     }
@@ -159,5 +193,81 @@ public class Game {
 
     public String getScore() {
         return "Score : " + score;
+    }
+
+    public void goRight() {
+        if (this.isPause())
+            return;
+
+        Piece piece = getLastPiece();
+
+        if (piece.canGoRight()) {
+            this.moveRight(piece);
+            piece.right();
+        }
+    }
+
+    public void goLeft() {
+        if (this.isPause())
+            return;
+
+        Piece piece = getLastPiece();
+
+        if (piece.canGoLeft()) {
+            this.moveLeft(piece);
+            piece.left();
+        }
+    }
+
+    private void moveLeft(Piece piece) {
+        int column = piece.getStartColumn();
+        int line = piece.getStartLine();
+        int[][] matrice = piece.getMatrice();
+
+        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+                int pieceColumn = matriceColumnIterator + column;
+                int pieceLine = matriceLineIterator + line;
+
+                gameboard[pieceLine][pieceColumn] = 0;
+                gameboard[pieceLine][pieceColumn - 1] = matriceValue;
+            }
+        }
+    }
+
+    private void moveDown(Piece piece) {
+        int column = piece.getStartColumn();
+        int line = piece.getStartLine();
+        int[][] matrice = piece.getMatrice();
+
+        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+                int pieceColumn = matriceColumnIterator + column;
+                int pieceLine = matriceLineIterator + line;
+
+                if (matriceLineIterator == 0)
+                    gameboard[pieceLine][pieceColumn] = 0;
+                gameboard[pieceLine + 1][pieceColumn] = matriceValue;
+            }
+        }
+    }
+
+    private void moveRight(Piece piece) {
+        int column = piece.getStartColumn();
+        int line = piece.getStartLine();
+        int[][] matrice = piece.getMatrice();
+
+        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+                int pieceColumn = matriceColumnIterator + column;
+                int pieceLine = matriceLineIterator + line;
+
+                gameboard[pieceLine][pieceColumn] = 0;
+                gameboard[pieceLine][pieceColumn + 1] = matriceValue;
+            }
+        }
     }
 }
