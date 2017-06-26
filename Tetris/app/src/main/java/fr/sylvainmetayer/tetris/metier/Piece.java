@@ -68,6 +68,11 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return getStartLine() + getMatrice().length < getContext().getResources().getInteger(R.integer.maxLines);
     }
 
+    @Override
+    public boolean canGoRight() {
+        return getStartColumn() + getMatrice()[0].length < getContext().getResources().getInteger(R.integer.maxColumns);
+    }
+
     public boolean canGoDown(int[][] gameboard, Game game) {
 
         if (!canGoDown())

@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game.goRight();
+                game.moveRight();
                 refresh();
             }
         });
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game.goLeft();
+                game.moveLeft();
                 refresh();
             }
         });

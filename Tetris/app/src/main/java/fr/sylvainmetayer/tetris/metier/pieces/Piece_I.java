@@ -39,11 +39,4 @@ public class Piece_I extends Piece {
     public boolean canGoLeft() {
         return true;
     }
-
-    @Override
-    public boolean canGoRight() {
-        return true;
-    }
-
-
 }
