@@ -3,8 +3,10 @@ package fr.sylvainmetayer.tetris.metier;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import fr.sylvainmetayer.tetris.MainActivity;
+import fr.sylvainmetayer.tetris.R;
 import fr.sylvainmetayer.tetris.metier.pieces.Piece_S;
 import fr.sylvainmetayer.tetris.utils.Utils;
 
@@ -104,10 +106,13 @@ public class Game {
     private void createNewPiece(MainActivity activity) {
         Log.d("PERFORM", "Creation of a new piece");
         // TODO Generate a new random piece
-        Piece start_piece = new Piece_S(0, 0, activity);
+
+        Random r = new Random();
+        int randomColumn = r.nextInt(activity.getResources().getInteger(R.integer.maxColumns) - 1);
+        Piece start_piece = new Piece_S(0, randomColumn, activity);
 
         if (!addPieceToGameBoard(start_piece)) // Can't add piece, game over
-            endGame(activity);
+            endGame();
         pieces.add(start_piece);
     }
 
@@ -165,16 +170,17 @@ public class Game {
         }
     }
 
-    private void endGame(MainActivity activity) {
+    private void endGame() {
         //Toast.makeText(activity, "Game over", Toast.LENGTH_LONG).show();
-        this.togglePause();
+        Log.i("END", "GAME OVER");
+        System.exit(0);
     }
 
     private Piece getLastPiece() {
         return pieces.get(pieces.size() - 1);
     }
 
-    String logGameboard() {
+    private String logGameboard() {
         StringBuilder sb = new StringBuilder();
         for (int[] aGameboard : gameboard) {
             for (int anAGameboard : aGameboard) {
@@ -203,7 +209,7 @@ public class Game {
 
         Piece piece = getLastPiece();
 
-        if (!piece.canGoLeft())
+        if (!piece.canGoLeft(gameboard))
             return;
 
         moveColumn(piece, -1);
@@ -234,7 +240,7 @@ public class Game {
 
         Piece piece = getLastPiece();
 
-        if (!piece.canGoRight())
+        if (!piece.canGoRight(gameboard))
             return;
 
         moveColumn(piece, 1);

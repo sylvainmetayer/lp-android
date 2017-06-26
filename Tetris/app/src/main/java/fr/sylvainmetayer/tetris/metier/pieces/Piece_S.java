@@ -16,6 +16,10 @@ public class Piece_S extends Piece {
         bottomPointsToCheck.add("0,2");
         bottomPointsToCheck.add("1,0");
         bottomPointsToCheck.add("1,1");
+        leftPointsToCheck.add("0,1");
+        leftPointsToCheck.add("1,0");
+        rightPointsToCheck.add("0,2");
+        rightPointsToCheck.add("1,1");
     }
 
     @Override
@@ -41,11 +45,6 @@ public class Piece_S extends Piece {
     @Override
     public boolean canRotate(Float angle) {
         return false;
-    }
-
-    @Override
-    public boolean canGoLeft() {
-        return true;
     }
 
 }

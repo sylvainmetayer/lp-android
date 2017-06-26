@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import fr.sylvainmetayer.tetris.R;
+import fr.sylvainmetayer.tetris.utils.Utils;
 
 public abstract class Piece implements Mouvement, MouvementPossible {
 
@@ -19,6 +20,8 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     private int color;
     private Context context;
     protected List<String> bottomPointsToCheck;
+    protected List<String> leftPointsToCheck;
+    protected List<String> rightPointsToCheck;
 
     public Piece(int[][] matrice, int line, int column, int color, Context context) {
         this.hauteur = matrice.length;
@@ -38,6 +41,8 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         this.color = color;
         this.context = context;
         this.bottomPointsToCheck = new ArrayList<>();
+        this.leftPointsToCheck = new ArrayList<>();
+        this.rightPointsToCheck = new ArrayList<>();
     }
 
     public Context getContext() {
@@ -67,10 +72,50 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     }
 
     @Override
-    public boolean canGoRight() {
-        return getStartColumn() + getMatrice()[0].length < getContext().getResources().getInteger(R.integer.maxColumns);
+    public boolean canGoLeft(int[][] gameboard) {
+        return checkColumnLimits(gameboard, -1, leftPointsToCheck);
     }
 
+    @Override
+    public boolean canGoRight(int[][] gameboard) {
+        return checkColumnLimits(gameboard, 1, rightPointsToCheck);
+    }
+
+    private boolean checkColumnLimits(int[][] gameboard, int columnValue, List<String> pointsToCheck) {
+        boolean isLeft = (columnValue == -1);
+
+        int column = this.getStartColumn();
+        int line = this.getStartLine();
+
+        for (String point : pointsToCheck) {
+            int pointLine = Integer.parseInt(point.split(",")[0]);
+            int pointColumn = Integer.parseInt(point.split(",")[1]);
+
+            int pieceLine = pointLine + line;
+            int pieceColumn = pointColumn + column;
+
+            if (isLeft) {
+                if (pieceColumn - 1 < 0) {
+                    Log.i("CANGO" + "LEFT", "Out of boundary, continue");
+                    return false;
+                }
+            } else {
+                if (pieceColumn + 1 >= getContext().getResources().getInteger(R.integer.maxColumns)) {
+                    Log.i("CANGO" + "RIGHT", "Out of boundary, continue");
+                    return false;
+                }
+            }
+
+            Log.d("CANGO" + (isLeft ? "LEFT" : "RIGHT"), isLeft + "Going to check" + Utils.formatPosition(pieceLine, (pieceColumn + columnValue)));
+            if (gameboard[pieceLine][pieceColumn + columnValue] != getEmptyPieceValue()) {
+                Log.w("CANGO" + (isLeft ? "LEFT" : "RIGHT"), "The position [" + (pieceLine) + "," + (pieceColumn + columnValue) + "] is not empty !");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean canGoDown(int[][] gameboard) {
         if (!(getStartLine() + getMatrice().length < getContext().getResources().getInteger(R.integer.maxLines)))
             return false;

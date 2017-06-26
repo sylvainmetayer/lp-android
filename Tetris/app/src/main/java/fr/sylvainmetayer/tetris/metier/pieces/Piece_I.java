@@ -16,6 +16,12 @@ public class Piece_I extends Piece {
     public Piece_I(int line, int column, Context context) {
         super(matrice, line, column, 1, context);
         bottomPointsToCheck.add("2,0");
+        rightPointsToCheck.add("0,0");
+        rightPointsToCheck.add("0,1");
+        rightPointsToCheck.add("0,2");
+        leftPointsToCheck.add("0,0");
+        leftPointsToCheck.add("0,1");
+        leftPointsToCheck.add("0,2");
     }
 
     @Override
@@ -41,11 +47,6 @@ public class Piece_I extends Piece {
     @Override
     public boolean canRotate(Float angle) {
         return false;
-    }
-
-    @Override
-    public boolean canGoLeft() {
-        return true;
     }
 
 }

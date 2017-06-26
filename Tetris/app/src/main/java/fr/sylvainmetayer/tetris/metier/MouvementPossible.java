@@ -4,9 +4,9 @@ public interface MouvementPossible {
 
     boolean canRotate(Float angle);
 
-    boolean canGoLeft();
+    boolean canGoLeft(int[][] gameboard);
 
-    boolean canGoRight();
+    boolean canGoRight(int[][] gameboard);
 
     boolean canGoDown(int[][] gameboard);
 
