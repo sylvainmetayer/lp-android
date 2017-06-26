@@ -1,12 +1,11 @@
 package fr.sylvainmetayer.tetris.metier;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import fr.sylvainmetayer.tetris.MainActivity;
-import fr.sylvainmetayer.tetris.metier.pieces.Piece_I;
+import fr.sylvainmetayer.tetris.metier.pieces.Piece_S;
 import fr.sylvainmetayer.tetris.utils.Utils;
 
 public class Game {
@@ -90,7 +89,7 @@ public class Game {
 
         Log.d("LAST_PIECE", lastPiece.toString());
 
-        if (lastPiece.canGoDown(gameboard, this) && !this.isPause()) {
+        if (lastPiece.canGoDown(gameboard) && !this.isPause()) {
             // Piece is currently going down
             this.moveDown(lastPiece);
             lastPiece.down();
@@ -105,11 +104,7 @@ public class Game {
     private void createNewPiece(MainActivity activity) {
         Log.d("PERFORM", "Creation of a new piece");
         // TODO Generate a new random piece
-        int[][] matrice =
-                {
-                        {1, 1, 1, 1, 1, 1, 1, 1, 1}
-                };
-        Piece start_piece = new Piece_I(matrice, 0, 0, activity);
+        Piece start_piece = new Piece_S(0, 0, activity);
 
         if (!addPieceToGameBoard(start_piece)) // Can't add piece, game over
             endGame(activity);
@@ -171,7 +166,7 @@ public class Game {
     }
 
     private void endGame(MainActivity activity) {
-        Toast.makeText(activity, "Game over", Toast.LENGTH_LONG).show();
+        //Toast.makeText(activity, "Game over", Toast.LENGTH_LONG).show();
         this.togglePause();
     }
 

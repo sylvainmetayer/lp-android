@@ -3,10 +3,11 @@ package fr.sylvainmetayer.tetris.metier;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import fr.sylvainmetayer.tetris.R;
-import fr.sylvainmetayer.tetris.utils.Utils;
 
 public abstract class Piece implements Mouvement, MouvementPossible {
 
@@ -17,6 +18,7 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     private int startColumn;
     private int color;
     private Context context;
+    protected List<String> bottomPointsToCheck;
 
     public Piece(int[][] matrice, int line, int column, int color, Context context) {
         this.hauteur = matrice.length;
@@ -35,6 +37,7 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         this.startColumn = column;
         this.color = color;
         this.context = context;
+        this.bottomPointsToCheck = new ArrayList<>();
     }
 
     public Context getContext() {
@@ -64,59 +67,34 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     }
 
     @Override
-    public boolean canGoDown() {
-        return getStartLine() + getMatrice().length < getContext().getResources().getInteger(R.integer.maxLines);
-    }
-
-    @Override
     public boolean canGoRight() {
         return getStartColumn() + getMatrice()[0].length < getContext().getResources().getInteger(R.integer.maxColumns);
     }
 
-    public boolean canGoDown(int[][] gameboard, Game game) {
-
-        if (!canGoDown())
+    public boolean canGoDown(int[][] gameboard) {
+        if (!(getStartLine() + getMatrice().length < getContext().getResources().getInteger(R.integer.maxLines)))
             return false;
 
         int column = this.getStartColumn();
         int line = this.getStartLine();
-        int[][] matrice = this.getMatrice();
-        int pieceLine = (matrice.length - 1) + line;
-        Log.d("CANGODOWN", "START !");
-        Log.d("CANGODOWN", this.toString());
 
-        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
-            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
-                int pieceColumn = matriceColumnIterator + column;
+        for (String point : bottomPointsToCheck) {
+            int pointLine = Integer.parseInt(point.split(",")[0]);
+            int pointColumn = Integer.parseInt(point.split(",")[1]);
 
-                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+            int pieceLine = pointLine + line;
+            int pieceColumn = pointColumn + column;
 
-                if (matriceValue == getEmptyPieceValue()) {
-                    continue;
-                }
+            if (pieceLine + 1 >= gameboard.length) {
+                Log.i("CANGODOWN", "Out of boundary, continue");
+                continue;
+            }
 
-                String logMessage = "We are testing the " + Utils.formatPosition(matriceLineIterator, matriceColumnIterator) + " of the matrice, which is " + matriceValue + ". " +
-                        "This matrice position correspond to the " + Utils.formatPosition(pieceLine, pieceColumn) + " of the game";
-                Log.d("CANGODOWN", logMessage);
-
-                // Check every last line of matrice of the piece, for every column
-                if (pieceLine + 1 >= gameboard.length) {
-                    Log.d("CANGODOWN", "Out of boundary, continue");
-                    continue;
-                }
-
-                if (gameboard[pieceLine + 1][pieceColumn] != getEmptyPieceValue()) {
-                    Log.d("CANGODOWN", game.logGameboard());
-                    Log.d("CANGODOWN", "The position [" + (pieceLine + 1) + "," + pieceColumn + "] is not empty !");
-                    return false;
-                }
-
-                Log.d("CANGODOWN", "The position [" + matriceLineIterator + "," + matriceColumnIterator + "] of the matrice can go down");
-                Log.d("CANGODOWN", "It means that the position [" + (pieceLine + 1) + "," + pieceColumn + "] is available on the gameboard");
-
+            if (gameboard[pieceLine + 1][pieceColumn] != getEmptyPieceValue()) {
+                Log.w("CANGODOWN", "The position [" + (pieceLine + 1) + "," + pieceColumn + "] is not empty !");
+                return false;
             }
         }
-
         return true;
     }
 

@@ -6,8 +6,16 @@ import fr.sylvainmetayer.tetris.metier.Piece;
 
 public class Piece_I extends Piece {
 
-    public Piece_I(int[][] matrice, int line, int column, Context context) {
+    private static int[][] matrice =
+            {
+                    {1},
+                    {1},
+                    {1}
+            };
+
+    public Piece_I(int line, int column, Context context) {
         super(matrice, line, column, 1, context);
+        bottomPointsToCheck.add("2,0");
     }
 
     @Override
@@ -39,4 +47,5 @@ public class Piece_I extends Piece {
     public boolean canGoLeft() {
         return true;
     }
+
 }

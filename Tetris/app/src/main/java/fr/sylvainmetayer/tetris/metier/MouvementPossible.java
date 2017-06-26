@@ -8,6 +8,6 @@ public interface MouvementPossible {
 
     boolean canGoRight();
 
-    boolean canGoDown();
+    boolean canGoDown(int[][] gameboard);
 
 }

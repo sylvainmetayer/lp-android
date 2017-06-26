@@ -115,13 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void initDatas() {
         datas = new ArrayList<>();
-        int[][] matrice =
-                {
-                        {1},
-                        {1},
-                        {1}
-                };
-        Piece start_piece = new Piece_I(matrice, 0, 9, this);
+        Piece start_piece = new Piece_I(0, 2, this);
         datas.add(start_piece);
     }
 }
