@@ -20,11 +20,20 @@ public class Piece_S extends Piece {
         leftPointsToCheck.add("1,0");
         rightPointsToCheck.add("0,2");
         rightPointsToCheck.add("1,1");
-    }
 
-    @Override
-    public void rotate() {
-        // TODO Appliquer la rotation à la matrice.
+        matricePosition0 = Piece_S.matrice;
+        matricePosition1 = new int[][]{
+                {1, 0},
+                {1, 1},
+                {0, 1}
+        };
+        matricePosition2 = Piece_S.matrice;
+        matricePosition3 = new int[][]{
+                {1, 1},
+                {0, 1, 1}
+        };
+        setMaxRotation(4);
+
     }
 
     @Override
@@ -40,11 +49,6 @@ public class Piece_S extends Piece {
     @Override
     public void down() {
         setStartLine(getStartLine() + 1);
-    }
-
-    @Override
-    public boolean canRotate(int[][] gameboard) {
-        return false;
     }
 
 }

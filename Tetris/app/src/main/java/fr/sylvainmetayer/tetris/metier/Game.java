@@ -42,7 +42,7 @@ public class Game {
                 }
             }
         }
-        Log.d("INIT_ENDED", logGameboard());
+        Log.d("INIT_ENDED", logGameboard(gameboard));
     }
 
     private void resetGame() {
@@ -71,6 +71,8 @@ public class Game {
         int line = piece.getStartLine();
         int[][] matrice = piece.getMatrice();
 
+        Log.d("ROTATION_ADD", piece.toString());
+
         for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
             for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
                 int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
@@ -78,8 +80,10 @@ public class Game {
                 int pieceLine = matriceLineIterator + line;
                 Log.d("ADD_PIECE", "affect value '" + matriceValue + "' at " + Utils.formatPosition(pieceLine, pieceColumn));
 
-                if (gameboard[pieceLine][pieceColumn] != Piece.getEmptyPieceValue())
+                if (gameboard[pieceLine][pieceColumn] != Piece.getEmptyPieceValue() && matriceValue != Piece.getEmptyPieceValue()) {
+                    Log.d("ROTATION", "Error :" + Utils.formatPosition(pieceLine, pieceColumn) + " is not empty !");
                     return false;
+                }
                 gameboard[pieceLine][pieceColumn] = matriceValue;
             }
         }
@@ -87,7 +91,7 @@ public class Game {
     }
 
     public void performAction(final MainActivity activity) {
-        Piece lastPiece = this.getLastPiece();
+        Piece lastPiece = this.getCurrentPiece();
 
         Log.d("LAST_PIECE", lastPiece.toString());
 
@@ -98,9 +102,9 @@ public class Game {
             Log.d("STATE_AFTER", lastPiece.toString());
         } else
             createNewPiece(activity);
-        if (checkLines(lastPiece))
+        if (checkFullLines(lastPiece))
             createNewPiece(activity);
-        Log.d("GBOARD", this.logGameboard());
+        Log.d("GBOARD", logGameboard(gameboard));
     }
 
     private void createNewPiece(MainActivity activity) {
@@ -121,7 +125,7 @@ public class Game {
      *
      * @param piece The current piece
      */
-    private boolean checkLines(Piece piece) {
+    private boolean checkFullLines(Piece piece) {
         // FIXME TODO
         for (int gameLineIterator = gameboard.length - 1; gameLineIterator >= 0; gameLineIterator--) {
             int cpt = 0;
@@ -173,14 +177,14 @@ public class Game {
     private void endGame() {
         //Toast.makeText(activity, "Game over", Toast.LENGTH_LONG).show();
         Log.i("END", "GAME OVER");
-        System.exit(0);
+        this.togglePause();
     }
 
-    private Piece getLastPiece() {
+    private Piece getCurrentPiece() {
         return pieces.get(pieces.size() - 1);
     }
 
-    private String logGameboard() {
+    static String logGameboard(int[][] gameboard) {
         StringBuilder sb = new StringBuilder();
         for (int[] aGameboard : gameboard) {
             for (int anAGameboard : aGameboard) {
@@ -203,18 +207,19 @@ public class Game {
         return "Score : " + score;
     }
 
-    public void moveLeft() {
+    public void moveLeft(MainActivity activity) {
         if (this.isPause())
             return;
 
-        Piece piece = getLastPiece();
+        Piece piece = getCurrentPiece();
 
         if (!piece.canGoLeft(gameboard))
             return;
 
         moveColumn(piece, -1);
         piece.left();
-        checkLines(piece);
+        if (checkFullLines(piece))
+            createNewPiece(activity);
     }
 
     private void moveDown(Piece piece) {
@@ -234,18 +239,19 @@ public class Game {
         }
     }
 
-    public void moveRight() {
+    public void moveRight(MainActivity activity) {
         if (this.isPause())
             return;
 
-        Piece piece = getLastPiece();
+        Piece piece = getCurrentPiece();
 
         if (!piece.canGoRight(gameboard))
             return;
 
         moveColumn(piece, 1);
         piece.right();
-        checkLines(piece);
+        if (checkFullLines(piece))
+            createNewPiece(activity);
     }
 
     private void moveColumn(Piece piece, int columnValue) {
@@ -261,6 +267,48 @@ public class Game {
 
                 gameboard[pieceLine][pieceColumn] = 0;
                 gameboard[pieceLine][pieceColumn + columnValue] = matriceValue;
+            }
+        }
+    }
+
+    public void rotate(MainActivity activity) {
+        if (this.isPause())
+            return;
+
+        Piece piece = getCurrentPiece();
+
+        if (!piece.canRotate(gameboard))
+            return;
+
+        Log.d("ROTATION", logGameboard(gameboard));
+        Log.d("ROTATION", "Etape 1 : Retirer l'ancienne piece du plateau d'entier");
+        removePieceFromGameBoard(piece);
+        Log.d("ROTATION", "Etape 2 : Changer la matrice de la piece");
+        Log.d("ROTATION", logGameboard(gameboard));
+        piece.rotate();
+        Log.d("ROTATION", "Etape 3 : Ajouter la nouvelle matrice de la piece sur le plateau d'entier");
+        addPieceToGameBoard(piece);
+        Log.d("ROTATION", logGameboard(gameboard));
+        //if (checkFullLines(piece))
+        //    createNewPiece(activity);
+    }
+
+    private void removePieceFromGameBoard(Piece piece) {
+        int column = piece.getStartColumn();
+        int line = piece.getStartLine();
+        int[][] matrice = piece.getMatrice();
+
+        for (int matriceLineIterator = 0; matriceLineIterator < matrice.length; matriceLineIterator++) {
+            for (int matriceColumnIterator = 0; matriceColumnIterator < matrice[matriceLineIterator].length; matriceColumnIterator++) {
+                int matriceValue = matrice[matriceLineIterator][matriceColumnIterator];
+                int pieceColumn = matriceColumnIterator + column;
+                int pieceLine = matriceLineIterator + line;
+
+                if (matriceValue != Piece.getEmptyPieceValue()) {
+                    gameboard[pieceLine][pieceColumn] = 0;
+                    Log.d("REMOVE", "I will remove" + Utils.formatPosition(pieceLine, pieceColumn) + " from gameboard");
+                }
+
             }
         }
     }

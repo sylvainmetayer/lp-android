@@ -12,8 +12,6 @@ import fr.sylvainmetayer.tetris.utils.Utils;
 
 public abstract class Piece implements Mouvement, MouvementPossible {
 
-    private int hauteur;
-    private int largeur;
     private int[][] matrice;
     private int startLine;
     private int startColumn;
@@ -22,19 +20,14 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     protected List<String> bottomPointsToCheck;
     protected List<String> leftPointsToCheck;
     protected List<String> rightPointsToCheck;
+    private int maxRotation;
+    private int currentRotation;
+    protected int[][] matricePosition0;
+    protected int[][] matricePosition1;
+    protected int[][] matricePosition2;
+    protected int[][] matricePosition3;
 
     public Piece(int[][] matrice, int line, int column, int color, Context context) {
-        this.hauteur = matrice.length;
-        this.largeur = 0;
-
-        for (int lineIterator = 0; lineIterator < matrice.length; lineIterator++) {
-            for (int columnIterator = 0; columnIterator < matrice[lineIterator].length; columnIterator++) {
-                int tmpLargeur = matrice[lineIterator][columnIterator];
-                if (tmpLargeur > largeur)
-                    largeur = tmpLargeur; // Get max largeur
-            }
-        }
-
         this.matrice = matrice;
         this.startLine = line;
         this.startColumn = column;
@@ -43,6 +36,8 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         this.bottomPointsToCheck = new ArrayList<>();
         this.leftPointsToCheck = new ArrayList<>();
         this.rightPointsToCheck = new ArrayList<>();
+        this.maxRotation = 0;
+        this.currentRotation = 0;
     }
 
     public Context getContext() {
@@ -157,8 +152,6 @@ public abstract class Piece implements Mouvement, MouvementPossible {
     public String toString() {
         StringBuilder sb;
         sb = new StringBuilder();
-        sb.append("Hauteur : ").append(hauteur).append(", ");
-        sb.append("Largeur : ").append(largeur).append("\n");
         sb.append("Matrice : ").append(Arrays.deepToString(matrice)).append("\n");
         sb.append("startLine : ").append(startLine).append(", ");
         sb.append("startColumn : ").append(startColumn).append(", ");
@@ -170,4 +163,48 @@ public abstract class Piece implements Mouvement, MouvementPossible {
         return 0;
     }
 
+    public static int[][] transposeMatrix(int[][] m) {
+        int[][] temp = new int[m[0].length][m.length];
+        for (int i = 0; i < m.length; i++)
+            for (int j = 0; j < m[0].length; j++)
+                temp[j][i] = m[i][j];
+        return temp;
+    }
+
+    @Override
+    public void rotate() {
+        Log.d("ROTATION_BEFORE", Arrays.deepToString(matrice));
+
+        setCurrentRotation((currentRotation + 1) % maxRotation);
+        Log.d("ROTATION", "Going to apply rotation n°" + currentRotation);
+        matrice = getMatrix(currentRotation);
+        Log.d("ROTATION_AFTER", Arrays.deepToString(matrice));
+    }
+
+    private int[][] getMatrix(int rotationNumber) {
+        switch (rotationNumber) {
+            case 0:
+                return matricePosition0;
+            case 1:
+                return matricePosition1;
+            case 2:
+                return matricePosition2;
+            case 3:
+                return matricePosition3;
+        }
+        return new int[0][0];
+    }
+
+    @Override
+    public boolean canRotate(int[][] gameboard) {
+        return true;
+    }
+
+    public void setMaxRotation(int maxRotation) {
+        this.maxRotation = maxRotation;
+    }
+
+    public void setCurrentRotation(int currentRotation) {
+        this.currentRotation = currentRotation;
+    }
 }

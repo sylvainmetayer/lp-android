@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, "click", Toast.LENGTH_SHORT).show();
+                game.rotate(MainActivity.this);
             }
         });
         layout.setOnTouchListener(new OnSwipeTouchListenerImpl(this));
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game.moveRight();
+                game.moveRight(MainActivity.this);
                 refresh();
             }
         });
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game.moveLeft();
+                game.moveLeft(MainActivity.this);
                 refresh();
             }
         });
