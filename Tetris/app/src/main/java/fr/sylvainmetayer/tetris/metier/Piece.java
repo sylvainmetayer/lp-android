@@ -94,21 +94,23 @@ public abstract class Piece implements Mouvement, MouvementPossible {
             int pieceLine = pointLine + line;
             int pieceColumn = pointColumn + column;
 
+            int newPieceColumnPosition = pieceColumn + columnValue;
+
             if (isLeft) {
-                if (pieceColumn - 1 < 0) {
+                if (newPieceColumnPosition < 0) {
                     Log.i("CANGO" + "LEFT", "Out of boundary, continue");
                     return false;
                 }
             } else {
-                if (pieceColumn + 1 >= getContext().getResources().getInteger(R.integer.maxColumns)) {
+                if (newPieceColumnPosition >= getContext().getResources().getInteger(R.integer.maxColumns)) {
                     Log.i("CANGO" + "RIGHT", "Out of boundary, continue");
                     return false;
                 }
             }
 
-            Log.d("CANGO" + (isLeft ? "LEFT" : "RIGHT"), isLeft + "Going to check" + Utils.formatPosition(pieceLine, (pieceColumn + columnValue)));
-            if (gameboard[pieceLine][pieceColumn + columnValue] != getEmptyPieceValue()) {
-                Log.w("CANGO" + (isLeft ? "LEFT" : "RIGHT"), "The position [" + (pieceLine) + "," + (pieceColumn + columnValue) + "] is not empty !");
+            Log.d("CANGO" + (isLeft ? "LEFT" : "RIGHT"), isLeft + "Going to check" + Utils.formatPosition(pieceLine, newPieceColumnPosition));
+            if (gameboard[pieceLine][newPieceColumnPosition] != getEmptyPieceValue()) {
+                Log.w("CANGO" + (isLeft ? "LEFT" : "RIGHT"), "The position [" + (pieceLine) + "," + newPieceColumnPosition + "] is not empty !");
                 return false;
             }
         }

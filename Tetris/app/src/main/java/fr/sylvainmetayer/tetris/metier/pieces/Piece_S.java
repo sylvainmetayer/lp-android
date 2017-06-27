@@ -23,7 +23,7 @@ public class Piece_S extends Piece {
     }
 
     @Override
-    public void rotate(Float angle) {
+    public void rotate() {
         // TODO Appliquer la rotation à la matrice.
     }
 
@@ -43,7 +43,7 @@ public class Piece_S extends Piece {
     }
 
     @Override
-    public boolean canRotate(Float angle) {
+    public boolean canRotate(int[][] gameboard) {
         return false;
     }
 

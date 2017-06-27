@@ -2,7 +2,7 @@ package fr.sylvainmetayer.tetris.metier;
 
 interface Mouvement {
 
-    void rotate(Float angle);
+    void rotate();
 
     void left();
 

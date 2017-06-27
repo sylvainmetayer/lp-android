@@ -2,7 +2,7 @@ package fr.sylvainmetayer.tetris.metier;
 
 public interface MouvementPossible {
 
-    boolean canRotate(Float angle);
+    boolean canRotate(int[][] gameboard);
 
     boolean canGoLeft(int[][] gameboard);
 

@@ -17,15 +17,15 @@ public class Piece_I extends Piece {
         super(matrice, line, column, 1, context);
         bottomPointsToCheck.add("2,0");
         rightPointsToCheck.add("0,0");
-        rightPointsToCheck.add("0,1");
-        rightPointsToCheck.add("0,2");
+        rightPointsToCheck.add("1,0");
+        rightPointsToCheck.add("2,0");
         leftPointsToCheck.add("0,0");
-        leftPointsToCheck.add("0,1");
-        leftPointsToCheck.add("0,2");
+        leftPointsToCheck.add("1,0");
+        leftPointsToCheck.add("2,0");
     }
 
     @Override
-    public void rotate(Float angle) {
+    public void rotate() {
         // TODO Appliquer la rotation à la matrice.
     }
 
@@ -45,8 +45,7 @@ public class Piece_I extends Piece {
     }
 
     @Override
-    public boolean canRotate(Float angle) {
+    public boolean canRotate(int[][] gameboard) {
         return false;
     }
-
 }
